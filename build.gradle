@@ -1,12 +1,18 @@
 plugins {
     id 'java'
+    id 'com.github.johnrengelman.shadow' version '5.2.0'
 }
 
-group 'org.example'
+sourceCompatibility = 17
+targetCompatibility = 17
+
+group 'com.dynxsty.dsbmobilebot'
 version '1.0-SNAPSHOT'
 
 repositories {
     mavenCentral()
+    maven { url 'https://m2.dv8tion.net/releases' }
+    maven { url 'https://jitpack.io' }
 }
 
 dependencies {
@@ -24,6 +30,19 @@ dependencies {
     testAnnotationProcessor 'org.projectlombok:lombok:1.18.20'
 }
 
-test {
-    useJUnitPlatform()
+jar{
+    manifest{ attributes("Manifest-Version": "1.0", "Main-Class": "com.dynxsty.dsbmobilebot.Bot") }
 }
+
+java{
+    toolchain{
+        sourceCompatibility(sourceCompatibility as JavaVersion)
+        targetCompatibility(targetCompatibility as JavaVersion)
+    }
+}
+
+tasks.withType(JavaCompile){ options.encoding = 'UTF-8'}
+tasks.withType( JavaCompile ).configureEach {
+    options.forkOptions.jvmArgs.addAll( ['--add-opens', 'jdk.compiler/com.sun.tools.javac.code=ALL-UNNAMED'] )
+}
+test { useJUnitPlatform() }
