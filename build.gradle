@@ -7,7 +7,6 @@ sourceCompatibility = 17
 targetCompatibility = 17
 
 group 'com.dynxsty.dsbmobilebot'
-version '1.0-SNAPSHOT'
 
 repositories {
     mavenCentral()
