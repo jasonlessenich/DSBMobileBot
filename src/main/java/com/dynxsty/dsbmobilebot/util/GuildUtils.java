@@ -9,8 +9,8 @@ public class GuildUtils {
 	private GuildUtils() {
 	}
 
-	public static MessageChannel getLogChannel(Guild guild) {
-		return Bot.config.get(guild).getModeration().getLogChannel();
+	public static MessageChannel getPlanChannel(Guild guild) {
+		return Bot.config.get(guild).getPlan().getPlanChannel();
 	}
 
 }

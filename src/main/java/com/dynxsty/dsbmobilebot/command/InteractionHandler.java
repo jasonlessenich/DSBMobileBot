@@ -104,7 +104,7 @@ public class InteractionHandler extends ListenerAdapter {
 			StringWriter sw = new StringWriter();
 			PrintWriter pw = new PrintWriter(sw);
 			e.getCause().printStackTrace(pw);
-			GuildUtils.getLogChannel(interaction.getGuild()).sendMessageFormat(
+			GuildUtils.getPlanChannel(interaction.getGuild()).sendMessageFormat(
 					"An exception occurred when %s issued the **%s** command in %s:\n```%s```\n",
 					interaction.getUser().getAsMention(),
 					interaction.getName(),
