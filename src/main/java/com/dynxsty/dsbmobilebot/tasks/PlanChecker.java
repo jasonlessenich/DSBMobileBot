@@ -11,7 +11,6 @@ import net.dv8tion.jda.api.entities.MessageEmbed;
 
 import java.io.IOException;
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -21,7 +20,7 @@ public class PlanChecker {
 	private List<DSBMobile.TimeTable> planDates;
 
 	public PlanChecker() {
-		this.planDates = new ArrayList<>();
+		this.planDates = Bot.dsbMobile.getTimeTables();
 	}
 
 	public void checkForNewPlans(JDA jda) {
@@ -45,6 +44,8 @@ public class PlanChecker {
 					}
 				}
 				log.info("Sent new Plans to Log Channel!");
+			} else {
+				log.info("Could not find any new Plans.");
 			}
 		}, 0, 30, TimeUnit.SECONDS);
 	}
