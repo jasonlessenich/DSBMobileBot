@@ -1,18 +1,24 @@
 package com.dynxsty.dsbmobilebot.systems.plans;
 
+import com.dynxsty.dih4jda.commands.ISlashCommand;
+import com.dynxsty.dih4jda.commands.dto.GuildSlashCommand;
 import com.dynxsty.dsbmobilebot.Bot;
-import com.dynxsty.dsbmobilebot.command.ResponseException;
-import com.dynxsty.dsbmobilebot.command.interfaces.ISlashCommand;
 import de.sematre.dsbmobile.DSBMobile;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
-import net.dv8tion.jda.api.requests.restaction.interactions.ReplyCallbackAction;
+import net.dv8tion.jda.api.interactions.commands.build.Commands;
 
 import java.io.IOException;
 import java.net.URL;
 
-public class GetPlansCommand implements ISlashCommand {
+public class GetPlansCommand extends GuildSlashCommand implements ISlashCommand {
+
+	public GetPlansCommand() {
+		this.setCommandData(Commands.slash("get-plans", "Retrieves all available plans from DSBMobile"));
+	}
+
 	@Override
-	public ReplyCallbackAction handleSlashCommandInteraction(SlashCommandInteractionEvent event) throws ResponseException {
+	public void handleSlashCommandInteraction(SlashCommandInteractionEvent event) {
+		event.deferReply().queue();
 		var tables = Bot.dsbMobile.getTimeTables();
 		event.getHook().sendMessageFormat("There are **%s** available plans!", tables.size()).queue();
 		for (DSBMobile.TimeTable table : tables) {
@@ -22,9 +28,7 @@ public class GetPlansCommand implements ISlashCommand {
 						.queue();
 			} catch (IOException e) {
 				e.printStackTrace();
-
 			}
 		}
-		return event.deferReply();
 	}
 }

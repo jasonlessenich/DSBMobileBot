@@ -12,9 +12,6 @@ public class StartupListener extends ListenerAdapter {
 	public void onReady(ReadyEvent event) {
 		Bot.config.loadGuilds(event.getJDA().getGuilds());
 		Bot.config.flush();
-		for (var guild : event.getJDA().getGuilds()) {
-			Bot.interactionHandler.registerCommands(guild);
-		}
 		log.info("Logged in as {}", event.getJDA().getSelfUser().getAsTag());
 		new PlanChecker().checkForNewPlans(event.getJDA());
 	}

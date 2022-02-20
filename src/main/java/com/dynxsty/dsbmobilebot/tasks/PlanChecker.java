@@ -1,7 +1,6 @@
 package com.dynxsty.dsbmobilebot.tasks;
 
 import com.dynxsty.dsbmobilebot.Bot;
-import com.dynxsty.dsbmobilebot.util.GuildUtils;
 import de.sematre.dsbmobile.DSBMobile;
 import lombok.extern.slf4j.Slf4j;
 import net.dv8tion.jda.api.JDA;
@@ -28,7 +27,7 @@ public class PlanChecker {
 				if (tables.size() <= 0) return;
 				this.planDates = tables;
 				for (var guild : jda.getGuilds()) {
-					var log = GuildUtils.getPlanChannel(guild);
+					var log = Bot.config.get(guild).getPlan().getPlanChannel();
 					log.sendMessageFormat("There are **%s** new plans! %s", tables.size(), Bot.config.get(guild).getPlan().getPlanPingRole().getAsMention()).queue();
 					for (DSBMobile.TimeTable table : tables) {
 						try {

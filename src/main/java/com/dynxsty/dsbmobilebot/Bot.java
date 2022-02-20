@@ -1,6 +1,6 @@
 package com.dynxsty.dsbmobilebot;
 
-import com.dynxsty.dsbmobilebot.command.InteractionHandler;
+import com.dynxsty.dih4jda.DIH4JDABuilder;
 import com.dynxsty.dsbmobilebot.config.BotConfig;
 import com.dynxsty.dsbmobilebot.listener.StartupListener;
 import com.dynxsty.dsbmobilebot.tasks.PresenceUpdater;
@@ -24,8 +24,6 @@ public class Bot {
 	 */
 	public static BotConfig config;
 
-	public static InteractionHandler interactionHandler;
-
 	public static DSBMobile dsbMobile;
 
 	/**
@@ -40,7 +38,7 @@ public class Bot {
 	 *     <li>Setting default timezone to UTC to make development easier.</li>
 	 *     <li>Setting async pool to allow us to execute tasks outside of the main processing thread.</li>
 	 *     <li>Creating and configuring the {@link JDA} instance.</li>
-	 *     <li>Adding the {@link InteractionHandler}.</li>
+	 *
 	 * </ol>
 	 *
 	 * @param args Command-Line arguments.
@@ -51,10 +49,11 @@ public class Bot {
 		config = new BotConfig(Path.of("config"));
 		dsbMobile = new DSBMobile(config.getSystems().getDsbMobile().getUsername(), config.getSystems().getDsbMobile().getPassword());
 		asyncPool = Executors.newScheduledThreadPool(config.getSystems().getAsyncPoolSize());
-		interactionHandler = new InteractionHandler();
 		var jda = JDABuilder.createDefault(config.getSystems().getJdaBotToken())
 				.enableIntents(GatewayIntent.getIntents(GatewayIntent.ALL_INTENTS))
-				.addEventListeners(interactionHandler)
+				.build();
+		DIH4JDABuilder.setJDA(jda)
+				.setCommandsPackage("com.dynxsty.dsbmobilebot.systems")
 				.build();
 		addEventListener(jda);
 	}
