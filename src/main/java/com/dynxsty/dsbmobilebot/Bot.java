@@ -3,6 +3,7 @@ package com.dynxsty.dsbmobilebot;
 import com.dynxsty.dih4jda.DIH4JDABuilder;
 import com.dynxsty.dsbmobilebot.config.BotConfig;
 import com.dynxsty.dsbmobilebot.listener.StartupListener;
+import com.dynxsty.dsbmobilebot.tasks.TimeTableChecker;
 import com.dynxsty.dsbmobilebot.tasks.PresenceUpdater;
 import de.sematre.dsbmobile.DSBMobile;
 import lombok.extern.slf4j.Slf4j;
@@ -25,6 +26,8 @@ public class Bot {
 	public static BotConfig config;
 
 	public static DSBMobile dsbMobile;
+
+	public static TimeTableChecker timeTableChecker;
 
 	/**
 	 * A general-purpose thread pool that can be used by the bot to execute
@@ -49,9 +52,10 @@ public class Bot {
 		config = new BotConfig(Path.of("config"));
 		dsbMobile = new DSBMobile(config.getSystems().getDsbMobile().getUsername(), config.getSystems().getDsbMobile().getPassword());
 		asyncPool = Executors.newScheduledThreadPool(config.getSystems().getAsyncPoolSize());
-		var jda = JDABuilder.createDefault(config.getSystems().getJdaBotToken())
+		JDA jda = JDABuilder.createDefault(config.getSystems().getJdaBotToken())
 				.enableIntents(GatewayIntent.getIntents(GatewayIntent.ALL_INTENTS))
 				.build();
+		timeTableChecker = new TimeTableChecker();
 		DIH4JDABuilder.setJDA(jda)
 				.setCommandsPackage("com.dynxsty.dsbmobilebot.systems")
 				.build();

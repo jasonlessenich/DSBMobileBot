@@ -76,7 +76,8 @@ public class PresenceUpdater extends ListenerAdapter {
 	public static PresenceUpdater standardActivities() {
 
 		return new PresenceUpdater(List.of(
-				jda -> Activity.listening(String.format("%s available plans!", Bot.dsbMobile.getTimeTables().size()))
+				jda -> Activity.listening(String.format("%s available plans!", Bot.dsbMobile.getTimeTables().size())),
+				jda -> Activity.watching("Made by Dynxsty#6666")
 		), 1, TimeUnit.MINUTES);
 	}
 

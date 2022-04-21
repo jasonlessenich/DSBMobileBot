@@ -1,7 +1,7 @@
 package com.dynxsty.dsbmobilebot.config;
 
 import com.dynxsty.dsbmobilebot.config.exception.UnknownPropertyException;
-import com.dynxsty.dsbmobilebot.config.guild.PlanConfig;
+import com.dynxsty.dsbmobilebot.config.guild.TimeTableConfig;
 import com.dynxsty.dsbmobilebot.config.guild.SlashCommandConfig;
 import com.dynxsty.dsbmobilebot.util.ReflectionUtils;
 import com.google.gson.Gson;
@@ -27,13 +27,13 @@ public class GuildConfig {
 	private transient Guild guild;
 	private transient Path file;
 
-	private PlanConfig plan;
+	private TimeTableConfig plan;
 	private SlashCommandConfig slashCommand;
 
 	public GuildConfig(Guild guild, Path file) {
 		this.file = file;
 		// Initialize all config items.
-		this.plan = new PlanConfig();
+		this.plan = new TimeTableConfig();
 		this.slashCommand = new SlashCommandConfig();
 		this.setGuild(guild);
 	}
@@ -74,7 +74,7 @@ public class GuildConfig {
 
 	private void setGuild(Guild guild) {
 		this.guild = guild;
-		if (this.plan == null) this.plan = new PlanConfig();
+		if (this.plan == null) this.plan = new TimeTableConfig();
 		this.plan.setGuildConfig(this);
 		if (this.slashCommand == null) this.slashCommand = new SlashCommandConfig();
 		this.slashCommand.setGuildConfig(this);
@@ -95,11 +95,11 @@ public class GuildConfig {
 
 	/**
 	 * Attempts to resolve a configuration property value by its name, using a
-	 * '.' to concatenate property names. For example, the {@link PlanConfig} has
+	 * '.' to concatenate property names. For example, the {@link TimeTableConfig} has
 	 * a property called <code>logChannelId</code>. We can resolve it via the
 	 * full name <code>moderation.logChannelId</code>, using the <code>moderation</code> field
 	 * of {@link GuildConfig} followed by the <code>logChannelId</code> field from
-	 * {@link PlanConfig}.
+	 * {@link TimeTableConfig}.
 	 *
 	 * @param propertyName The name of the property.
 	 * @return The value of the property, if found, or null otherwise.

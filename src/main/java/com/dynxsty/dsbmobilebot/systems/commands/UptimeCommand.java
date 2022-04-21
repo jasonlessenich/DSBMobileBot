@@ -1,7 +1,7 @@
 package com.dynxsty.dsbmobilebot.systems.commands;
 
-import com.dynxsty.dih4jda.commands.ISlashCommand;
-import com.dynxsty.dih4jda.commands.dto.GlobalSlashCommand;
+import com.dynxsty.dih4jda.commands.interactions.slash_command.ISlashCommand;
+import com.dynxsty.dih4jda.commands.interactions.slash_command.dao.GlobalSlashCommand;
 import com.dynxsty.dsbmobilebot.Bot;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;

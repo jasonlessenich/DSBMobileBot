@@ -1,12 +1,10 @@
 package com.dynxsty.dsbmobilebot.systems.commands;
 
-import com.dynxsty.dih4jda.commands.ISlashCommand;
-import com.dynxsty.dih4jda.commands.dto.GlobalSlashCommand;
-import com.dynxsty.dih4jda.commands.dto.GuildSlashCommand;
+import com.dynxsty.dih4jda.commands.interactions.slash_command.ISlashCommand;
+import com.dynxsty.dih4jda.commands.interactions.slash_command.dao.GlobalSlashCommand;
 import com.dynxsty.dsbmobilebot.Bot;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
-import net.dv8tion.jda.api.interactions.commands.build.CommandData;
 import net.dv8tion.jda.api.interactions.commands.build.Commands;
 
 public class PingCommand extends GlobalSlashCommand implements ISlashCommand {

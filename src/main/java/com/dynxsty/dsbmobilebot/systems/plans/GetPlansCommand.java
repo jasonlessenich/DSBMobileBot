@@ -1,7 +1,7 @@
 package com.dynxsty.dsbmobilebot.systems.plans;
 
-import com.dynxsty.dih4jda.commands.ISlashCommand;
-import com.dynxsty.dih4jda.commands.dto.GuildSlashCommand;
+import com.dynxsty.dih4jda.commands.interactions.slash_command.ISlashCommand;
+import com.dynxsty.dih4jda.commands.interactions.slash_command.dao.GuildSlashCommand;
 import com.dynxsty.dsbmobilebot.Bot;
 import de.sematre.dsbmobile.DSBMobile;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
