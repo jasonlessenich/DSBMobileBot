@@ -14,7 +14,7 @@ public class StartupListener extends ListenerAdapter {
 		Bot.config.loadGuilds(event.getJDA().getGuilds());
 		Bot.config.flush();
 		log.info("Logged in as {}", event.getJDA().getSelfUser().getAsTag());
-		Bot.asyncPool.scheduleAtFixedRate(() -> Bot.timeTableChecker.checkForNewTimeTables(event.getJDA()),
+		Bot.asyncPool.scheduleAtFixedRate(() -> Bot.planChecker.checkForNewPlans(event.getJDA()),
 				0, 30, TimeUnit.SECONDS
 		);
 	}
