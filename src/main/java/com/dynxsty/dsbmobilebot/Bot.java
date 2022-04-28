@@ -9,7 +9,6 @@ import de.sematre.dsbmobile.DSBMobile;
 import lombok.extern.slf4j.Slf4j;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
-import net.dv8tion.jda.api.requests.GatewayIntent;
 
 import java.nio.file.Path;
 import java.time.Instant;
@@ -52,8 +51,7 @@ public class Bot {
 		config = new BotConfig(Path.of("config"));
 		dsbMobile = new DSBMobile(config.getSystems().getDsbMobile().getUsername(), config.getSystems().getDsbMobile().getPassword());
 		asyncPool = Executors.newScheduledThreadPool(config.getSystems().getAsyncPoolSize());
-		JDA jda = JDABuilder.createDefault(config.getSystems().getJdaBotToken())
-				.enableIntents(GatewayIntent.getIntents(GatewayIntent.ALL_INTENTS))
+		JDA jda = JDABuilder.createLight(config.getSystems().getJdaBotToken())
 				.build();
 		planChecker = new PlanChecker();
 		DIH4JDABuilder.setJDA(jda)

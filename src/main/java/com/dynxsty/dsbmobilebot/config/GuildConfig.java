@@ -1,8 +1,8 @@
 package com.dynxsty.dsbmobilebot.config;
 
 import com.dynxsty.dsbmobilebot.config.exception.UnknownPropertyException;
-import com.dynxsty.dsbmobilebot.config.guild.TimeTableConfig;
 import com.dynxsty.dsbmobilebot.config.guild.SlashCommandConfig;
+import com.dynxsty.dsbmobilebot.config.guild.TimeTableConfig;
 import com.dynxsty.dsbmobilebot.util.ReflectionUtils;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;

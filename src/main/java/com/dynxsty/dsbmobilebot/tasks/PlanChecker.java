@@ -7,11 +7,9 @@ import lombok.extern.slf4j.Slf4j;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.MessageChannel;
-import net.dv8tion.jda.api.entities.TextChannel;
 import net.dv8tion.jda.api.requests.restaction.MessageAction;
 
 import java.io.IOException;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -32,14 +30,17 @@ public class PlanChecker {
 			this.timetables = tables;
 			for (Guild guild : jda.getGuilds()) {
 				MessageChannel logChannel = Bot.config.get(guild).getPlan().getTimeTableChannel();
-				if (logChannel == null) return;
+				if (logChannel == null) {
+					log.warn("Could not find Log Channel for " + guild.getName());
+					return;
+				}
 				logChannel.sendMessageFormat("Found **%s** new plans!", tables.size()).queue();
 				try {
 					PlanUtils.buildPlanAction(logChannel, tables).forEach(MessageAction::queue);
 				} catch (IOException e) {
 					log.error("Couldn't send new Plans to Log Channel: ", e);
 				}
-				log.info("Sent new Plans to #{}", logChannel.getName());
+				log.info("Sent new Plans to #{} ({})", logChannel.getName(), guild.getName());
 			}
 		}
 	}

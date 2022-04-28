@@ -8,7 +8,6 @@ import net.dv8tion.jda.api.events.ReadyEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 
 import javax.annotation.Nonnull;
-import java.sql.SQLException;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.Executors;
@@ -76,8 +75,7 @@ public class PresenceUpdater extends ListenerAdapter {
 	public static PresenceUpdater standardActivities() {
 
 		return new PresenceUpdater(List.of(
-				jda -> Activity.listening(String.format("%s available plans!", Bot.dsbMobile.getTimeTables().size())),
-				jda -> Activity.watching("Made by Dynxsty#6666")
+				jda -> Activity.listening(String.format("%s available plans!", Bot.dsbMobile.getTimeTables().size()))
 		), 1, TimeUnit.MINUTES);
 	}
 
