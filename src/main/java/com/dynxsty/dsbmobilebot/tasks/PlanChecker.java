@@ -9,7 +9,6 @@ import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.MessageChannel;
 import net.dv8tion.jda.api.requests.restaction.MessageAction;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -36,8 +35,8 @@ public class PlanChecker {
 				}
 				logChannel.sendMessageFormat("Found **%s** new plans!", tables.size()).queue();
 				try {
-					PlanUtils.buildPlanAction(logChannel, tables).forEach(MessageAction::queue);
-				} catch (IOException e) {
+					PlanUtils.buildPlanAction(logChannel, tables, true).forEach(MessageAction::queue);
+				} catch (Exception e) {
 					log.error("Couldn't send new Plans to Log Channel: ", e);
 				}
 				log.info("Sent new Plans to #{} ({})", logChannel.getName(), guild.getName());

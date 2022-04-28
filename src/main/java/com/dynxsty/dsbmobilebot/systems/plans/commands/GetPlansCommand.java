@@ -23,7 +23,7 @@ public class GetPlansCommand extends GuildSlashCommand {
 		List<DSBMobile.TimeTable> tables = Bot.dsbMobile.getTimeTables();
 		event.getHook().sendMessageFormat("Found **%s** plans!", tables.size()).queue();
 		try {
-			PlanUtils.buildPlanAction(event.getChannel(), tables).forEach(MessageAction::queue);
+			PlanUtils.buildPlanAction(event.getChannel(), tables, false).forEach(MessageAction::queue);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
