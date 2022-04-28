@@ -10,15 +10,34 @@ import java.io.IOException;
 import java.net.URL;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class PlanUtils {
 
-	private PlanUtils() {}
+	private PlanUtils() {
+	}
 
-	public static MessageAction buildPlanAction(MessageChannel channel, List<DSBMobile.TimeTable> tables, DSBMobile.TimeTable table) throws IOException {
-		return channel.sendMessageEmbeds(buildPlanEmbed(table))
-				.addFile(new URL(table.getDetail()).openStream(), String.format("%s-%s.png", table.getUUID(), tables.indexOf(table)));
+	public static Collection<MessageAction> buildPlanAction(MessageChannel channel, List<DSBMobile.TimeTable> tables) throws IOException {
+		Map<String, MessageAction> actions = new HashMap<>();
+		for (DSBMobile.TimeTable table : tables) {
+			// group new plans by date
+			if (actions.containsKey(table.getTitle())) {
+				MessageAction action = actions.get(table.getTitle());
+				actions.put(table.getTitle(),
+						action.addFile(new URL(table.getDetail()).openStream(),
+								String.format("%s-%s.png", table.getUUID(), tables.indexOf(table))));
+			} else {
+				actions.put(table.getTitle(),
+						channel.sendMessageEmbeds(buildPlanEmbed(table))
+								.addFile(new URL(table.getDetail()).openStream(),
+										String.format("%s-%s.png", table.getUUID(), tables.indexOf(table)))
+				);
+			}
+		}
+		return actions.values();
 	}
 
 	public static MessageEmbed buildPlanEmbed(DSBMobile.TimeTable table) {

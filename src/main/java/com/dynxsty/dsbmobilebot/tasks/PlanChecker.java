@@ -8,6 +8,7 @@ import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.MessageChannel;
 import net.dv8tion.jda.api.entities.TextChannel;
+import net.dv8tion.jda.api.requests.restaction.MessageAction;
 
 import java.io.IOException;
 import java.net.URL;
@@ -33,12 +34,10 @@ public class PlanChecker {
 				MessageChannel logChannel = Bot.config.get(guild).getPlan().getTimeTableChannel();
 				if (logChannel == null) return;
 				logChannel.sendMessageFormat("Found **%s** new plans!", tables.size()).queue();
-				for (DSBMobile.TimeTable table : tables) {
-					try {
-						PlanUtils.buildPlanAction(logChannel, tables, table).queue();
-					} catch (IOException e) {
-						e.printStackTrace();
-					}
+				try {
+					PlanUtils.buildPlanAction(logChannel, tables).forEach(MessageAction::queue);
+				} catch (IOException e) {
+					log.error("Couldn't send new Plans to Log Channel: ", e);
 				}
 				log.info("Sent new Plans to #{}", logChannel.getName());
 			}
