@@ -7,10 +7,10 @@ import net.dv8tion.jda.api.entities.TextChannel;
 
 @Data
 @EqualsAndHashCode(callSuper = true)
-public class TimeTableConfig extends GuildConfigItem {
-	private long timeTableChannelId;
+public class PlanConfig extends GuildConfigItem {
+	private long channelId;
 
-	public TextChannel getTimeTableChannel() {
-		return this.getGuild().getTextChannelById(this.timeTableChannelId);
+	public TextChannel getChannel() {
+		return this.getGuild().getTextChannelById(this.channelId);
 	}
 }

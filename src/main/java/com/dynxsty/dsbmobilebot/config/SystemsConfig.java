@@ -10,7 +10,9 @@ public class SystemsConfig {
 	 */
 	private String jdaBotToken = "";
 
-
+	/**
+	 * Configuration for the DSBMobile client.
+	 */
 	private DSBMobileConfig dsbMobile = new DSBMobileConfig();
 
 	/**
@@ -20,7 +22,7 @@ public class SystemsConfig {
 	private int asyncPoolSize = 4;
 
 	/**
-	 * Configuration settings for the DSBMobile client.
+	 * Configuration for the DSBMobile client.
 	 */
 	@Data
 	public static class DSBMobileConfig {

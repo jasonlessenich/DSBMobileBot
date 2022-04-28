@@ -29,7 +29,7 @@ public class PlanChecker {
 			if (tables.size() <= 0) return;
 			this.timetables = tables;
 			for (Guild guild : jda.getGuilds()) {
-				MessageChannel logChannel = Bot.config.get(guild).getPlan().getTimeTableChannel();
+				MessageChannel logChannel = Bot.config.get(guild).getPlan().getChannel();
 				if (logChannel == null) {
 					log.warn("Could not find Log Channel for " + guild.getName());
 					return;
