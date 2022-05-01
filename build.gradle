@@ -22,13 +22,22 @@ dependencies {
     }
     implementation 'com.github.DynxstyGIT:DIH4JDA:1.4.2'
     implementation 'de.sematre.dsbmobile:DSBmobile-API:1.8'
+    implementation 'net.sourceforge.tess4j:tess4j:5.2.0'
     
     implementation group: 'ch.qos.logback', name: 'logback-classic', version: '1.2.10'
 
-    compileOnly 'org.projectlombok:lombok:1.18.20'
-    annotationProcessor 'org.projectlombok:lombok:1.18.22'
-    testCompileOnly 'org.projectlombok:lombok:1.18.20'
+    // H2 Database
+    implementation group: 'com.h2database', name: 'h2', version: '2.1.212'
+    implementation 'com.zaxxer:HikariCP:5.0.1'
+
+    // Lombok Annotations
+    compileOnly 'org.projectlombok:lombok:1.18.24'
+    annotationProcessor 'org.projectlombok:lombok:1.18.24'
+    testCompileOnly 'org.projectlombok:lombok:1.18.24'
     testAnnotationProcessor 'org.projectlombok:lombok:1.18.20'
+
+    // Apache Commons
+    implementation group: 'org.apache.commons', name: 'commons-lang3', version: '3.0'
 }
 
 jar{

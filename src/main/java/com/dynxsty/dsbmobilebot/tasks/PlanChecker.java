@@ -1,7 +1,7 @@
 package com.dynxsty.dsbmobilebot.tasks;
 
 import com.dynxsty.dsbmobilebot.Bot;
-import com.dynxsty.dsbmobilebot.util.PlanUtils;
+import com.dynxsty.dsbmobilebot.systems.plans.PlanProcessor;
 import de.sematre.dsbmobile.DSBMobile;
 import lombok.extern.slf4j.Slf4j;
 import net.dv8tion.jda.api.JDA;
@@ -9,7 +9,6 @@ import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.MessageChannel;
 import net.dv8tion.jda.api.requests.restaction.MessageAction;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,7 +25,7 @@ public class PlanChecker {
 		List<DSBMobile.TimeTable> tables = Bot.dsbMobile.getTimeTables();
 		log.info("Checking for new Plans...");
 		if (!compareList(this.timetables, tables)) {
-			if (tables.size() <= 0) return;
+			if (tables.isEmpty()) return;
 			this.timetables = tables;
 			for (Guild guild : jda.getGuilds()) {
 				MessageChannel logChannel = Bot.config.get(guild).getPlan().getChannel();
@@ -36,8 +35,8 @@ public class PlanChecker {
 				}
 				logChannel.sendMessageFormat("Found **%s** new plans!", tables.size()).queue();
 				try {
-					PlanUtils.buildPlanAction(logChannel, tables).forEach(MessageAction::queue);
-				} catch (IOException e) {
+					PlanProcessor.buildPlanAction(guild, logChannel, tables, true).forEach(MessageAction::queue);
+				} catch (Exception e) {
 					log.error("Couldn't send new Plans to Log Channel: ", e);
 				}
 				log.info("Sent new Plans to #{} ({})", logChannel.getName(), guild.getName());

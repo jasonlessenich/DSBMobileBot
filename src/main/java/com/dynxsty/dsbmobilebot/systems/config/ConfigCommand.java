@@ -17,13 +17,12 @@ import net.dv8tion.jda.api.interactions.components.text.TextInputStyle;
 import net.dv8tion.jda.api.interactions.modals.ModalMapping;
 
 import java.util.List;
-import java.util.Objects;
 
 public class ConfigCommand extends GuildSlashCommand implements ModalHandler {
 
 	public ConfigCommand(Guild guild) {
 		setCommandData(Commands.slash("config", "Allows to change this server's config").setDefaultEnabled(false));
-		setCommandPrivileges(CommandPrivilege.disableRole(guild.getIdLong()), CommandPrivilege.enableUser(guild.getOwnerIdLong()));
+		//setCommandPrivileges(CommandPrivilege.disableRole(guild.getIdLong()), CommandPrivilege.enableUser(guild.getOwnerIdLong()));
 		handleModalIds("config");
 	}
 
