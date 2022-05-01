@@ -19,7 +19,13 @@ public class SystemsConfig {
 	 * The number of threads to allocate to the bot's general purpose async
 	 * thread pool.
 	 */
-	private int asyncPoolSize = 4;
+	private int asyncPoolSize = 8;
+
+	/**
+	 * Configuration for the Hikari connection pool that's used for the bot's
+	 * SQL data source.
+	 */
+	private HikariConfig hikariConfig = new HikariConfig();
 
 	/**
 	 * Configuration for the DSBMobile client.
@@ -28,5 +34,14 @@ public class SystemsConfig {
 	public static class DSBMobileConfig {
 		private String username = "";
 		private String password = "";
+	}
+
+	/**
+	 * Configuration settings for the Hikari connection pool.
+	 */
+	@Data
+	public static class HikariConfig {
+		private String jdbcUrl = "jdbc:h2:tcp://localhost:9130/./dsb_bot";
+		private int maximumPoolSize = 5;
 	}
 }

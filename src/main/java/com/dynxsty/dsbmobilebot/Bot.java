@@ -2,16 +2,16 @@ package com.dynxsty.dsbmobilebot;
 
 import com.dynxsty.dih4jda.DIH4JDABuilder;
 import com.dynxsty.dsbmobilebot.config.BotConfig;
+import com.dynxsty.dsbmobilebot.data.h2db.DbHelper;
 import com.dynxsty.dsbmobilebot.listener.StartupListener;
 import com.dynxsty.dsbmobilebot.tasks.PlanChecker;
 import com.dynxsty.dsbmobilebot.tasks.PresenceUpdater;
-import com.dynxsty.dsbmobilebot.util.PlanUtils;
+import com.zaxxer.hikari.HikariDataSource;
 import de.sematre.dsbmobile.DSBMobile;
 import lombok.extern.slf4j.Slf4j;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 
-import java.io.File;
 import java.nio.file.Path;
 import java.time.Instant;
 import java.time.ZoneId;
@@ -29,6 +29,13 @@ public class Bot {
 	public static DSBMobile dsbMobile;
 
 	public static PlanChecker planChecker;
+
+	/**
+	 * A reference to the data source that provides access to the relational
+	 * database that this bot users for certain parts of the application. Use
+	 * this to obtain a connection and perform transactions.
+	 */
+	public static HikariDataSource dataSource;
 
 	/**
 	 * A general-purpose thread pool that can be used by the bot to execute
@@ -51,6 +58,7 @@ public class Bot {
 	public static void main(String[] args) throws Exception {
 		TimeZone.setDefault(TimeZone.getTimeZone(ZoneId.of("Europe/Berlin").getRules().getOffset(Instant.now())));
 		config = new BotConfig(Path.of("config"));
+		dataSource = DbHelper.initDataSource(config);
 		dsbMobile = new DSBMobile(config.getSystems().getDsbMobile().getUsername(), config.getSystems().getDsbMobile().getPassword());
 		asyncPool = Executors.newScheduledThreadPool(config.getSystems().getAsyncPoolSize());
 		JDA jda = JDABuilder.createLight(config.getSystems().getJdaBotToken())
