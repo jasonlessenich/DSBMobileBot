@@ -94,8 +94,8 @@ public class PlanProcessor {
 	 * @param ocrResult The OCR's result.
 	 * @return A {@link List} containing all members that should be mentioned.
 	 */
-	private static List<Long> findNotifications(String ocrResult) {
-		List<Long> users = new ArrayList<>();
+	private static List<Pair<Course, Long>> findNotifications(String ocrResult) {
+		List<Pair<Course, Long>> users = new ArrayList<>();
 		try (Scanner scanner = new Scanner(ocrResult); Connection con = Bot.dataSource.getConnection()) {
 			String lastClass = null;
 			// Read through the whole String, line by line.
@@ -113,10 +113,15 @@ public class PlanProcessor {
 					line = String.format("%s %s", lastClass, rawLine);
 				}
 				Optional<Course> optional = Course.containsCourse(line);
-				if (optional.isPresent()) {
+				if (optional.isPresent() && lastClass != null) {
 					Course course = optional.get();
 					NotificationAccountRepository repo = new NotificationAccountRepository(con);
-					users.addAll(repo.getBySubject(course).stream().map(NotificationAccount::getUserId).toList());
+					final String finalLastClass = lastClass;
+					users.addAll(repo.getBySubject(course).stream()
+							.filter(a -> finalLastClass.contains(String.valueOf(a.getClassLevel())))
+							.map(NotificationAccount::getUserId)
+							.map(a -> new Pair<>(course, a))
+							.toList());
 				}
 			}
 		} catch (SQLException e) {
@@ -158,7 +163,7 @@ public class PlanProcessor {
 	 * @param name    The plan's filename.
 	 */
 	public static void analyzePlan(Guild guild, MessageChannel channel, DSBMobile.TimeTable table, String name) {
-		List<Long> users = findNotifications(executeOCR(table.getDetail()));
+		List<Pair<Course, Long>> users = findNotifications(executeOCR(table.getDetail()));
 		Optional<Message> messageOptional = getPlanMessage(channel, name);
 		messageOptional.ifPresent(message -> {
 			// change the embed's color
@@ -169,8 +174,8 @@ public class PlanProcessor {
 			).queue();
 			if (!users.isEmpty()) {
 				StringBuilder sb = new StringBuilder();
-				users.forEach(user -> sb.append(String.format("<@%s> ", user)));
-				message.replyFormat("%s\nThis might be interesting for you!", sb.toString()).queue();
+				users.forEach(user -> sb.append(String.format(", <@%s> (%s)", user.second(), user.first().toString())));
+				message.replyFormat("%s\nThis might be interesting for you!", sb.substring(2)).queue();
 			}
 		});
 	}
