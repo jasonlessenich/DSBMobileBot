@@ -1,7 +1,9 @@
 package com.dynxsty.dsbmobilebot.systems.plans;
 
 import com.dynxsty.dsbmobilebot.Bot;
-import com.dynxsty.dsbmobilebot.systems.plans.commands.notification.dao.GuildNotificationAccountRepository;
+import com.dynxsty.dsbmobilebot.systems.plans.commands.notification.dao.NotificationAccountRepository;
+import com.dynxsty.dsbmobilebot.systems.plans.commands.notification.model.NotificationAccount;
+import com.dynxsty.dsbmobilebot.util.Pair;
 import de.sematre.dsbmobile.DSBMobile;
 import lombok.extern.slf4j.Slf4j;
 import net.dv8tion.jda.api.EmbedBuilder;
@@ -25,7 +27,7 @@ import java.util.*;
 @Slf4j
 public class PlanProcessor {
 
-	public static Path TESSERACT_DIR = Path.of("tesseract");
+	public static final Path tesseractDir = Path.of("tesseract");
 
 	// Hide the constructor
 	private PlanProcessor() {
@@ -55,12 +57,7 @@ public class PlanProcessor {
 						channel.sendMessageEmbeds(buildPlanEmbed(table))
 								.addFile(new URL(table.getDetail()).openStream(), planName));
 			}
-			// If enabled, this will analyze the current plan.
-			if (analyze) Bot.asyncPool.submit(() -> {
-				if (table.getTitle().equals("02.05.2022.pdf")) {
-					analyzePlan(guild, channel, table, planName);
-				}
-			});
+			if (analyze) Bot.asyncPool.submit(() -> analyzePlan(guild, channel, table, planName));
 		}
 		return actions.values();
 	}
@@ -81,7 +78,7 @@ public class PlanProcessor {
 			// Set up Tesseract
 			Tesseract tesseract = new Tesseract();
 			tesseract.setLanguage("deu");
-			tesseract.setDatapath(PlanProcessor.TESSERACT_DIR.toString());
+			tesseract.setDatapath(PlanProcessor.tesseractDir.toString());
 			tesseract.setPageSegMode(1);
 			tesseract.setOcrEngineMode(1);
 			result = tesseract.doOCR(image);
@@ -100,30 +97,30 @@ public class PlanProcessor {
 	private static List<Long> findNotifications(String ocrResult) {
 		List<Long> users = new ArrayList<>();
 		try (Scanner scanner = new Scanner(ocrResult); Connection con = Bot.dataSource.getConnection()) {
-			GuildNotificationAccountRepository repo = new GuildNotificationAccountRepository(con);
-
 			String lastClass = null;
 			// Read through the whole String, line by line.
 			while (scanner.hasNextLine()) {
-				String line = scanner.nextLine();
-				String[] split = line.split("\\s+");
-				// we dont want empty lines
+				String rawLine = scanner.nextLine();
+				String line = "";
+				String[] split = rawLine.split("\\s+");
+				// we don't want empty lines
 				if (split.length <= 0) continue;
-				// check if the string contains a number, bot NOT contains a ".".
 				if (split[0].matches(".*\\d.*") && !split[0].contains(".")) {
 					// As it's a number and does not contain a ".", we assume it must be a class.
 					lastClass = split[0];
-					log.info(line);
-				} else if (lastClass != null) {
-					// check if the string is blank or matches a number. If the split contains more than 1
-					// element and the current line is not blank
-					if (split.length > 1 && line.trim().length() > 0 && split[0].isBlank() || split[0].matches(".*\\d.*")) {
-						log.info("{} {}", lastClass, line);
-					}
+					line = rawLine;
+				} else if (lastClass != null && split.length > 1 && rawLine.trim().length() > 0 && split[0].isBlank() || split[0].matches(".*\\d.*")) {
+					line = String.format("%s %s", lastClass, rawLine);
+				}
+				Optional<Course> optional = Course.containsCourse(line);
+				if (optional.isPresent()) {
+					Course course = optional.get();
+					NotificationAccountRepository repo = new NotificationAccountRepository(con);
+					users.addAll(repo.getBySubject(course).stream().map(NotificationAccount::getUserId).toList());
 				}
 			}
 		} catch (SQLException e) {
-			log.error("");
+			log.error("An Exception was raised while a plan was analyzed: " + e.getMessage());
 		}
 		return users;
 	}
